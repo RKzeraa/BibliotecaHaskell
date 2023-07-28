@@ -38,7 +38,18 @@ pessoasComEmprestimo (lp, ll, le) = nub (aux le)
     aux [] = []
     aux ((p, l) : calda) = p : aux calda
 
+-- retorna o nome de todos os livros (emprestados ou disponíveis)
+-- sem repetição
+-- pode usar a função nub de Data.List que remove repetição
+-- [Entrada] -> livros bancoDados0
+-- [Saida] -> ["Java","Concorrencia","CSP","UML","Haskell"]
+livros :: Biblioteca -> [Nome]
+livros (_, livrosDisponiveis, livrosEmprestados) = nub [nome | L nome _ <- livrosDisponiveis ++ map snd livrosEmprestados]
+
 main :: IO ()
 main = do
   putStrLn "Lista de pessoas com emprestimos sem repetição:"
   print (pessoasComEmprestimo bancoDados0)
+
+  putStrLn "Lista de livros sem repetição:"
+  print (livros bancoDados0)
