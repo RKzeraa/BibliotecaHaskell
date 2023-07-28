@@ -67,6 +67,15 @@ livroDisponivel (_, livrosDisponiveis, _) nome = length [nomeLivro | L nomeLivro
 usuarioApto :: Biblioteca -> Telefone -> Bool
 usuarioApto (usuarios, _, _) telefone = any (\(P _ tel) -> tel == telefone) usuarios
 
+-- livros que estao com uma pessoa cujo telefone é fornecido
+-- lista retornada é vazia quando usuário não possui o livro
+-- ou quando o telefone não está cadastrado
+-- Retorna os livros emprestados por uma pessoa específica
+-- [Entrada] -> livrosPessoa bancoDados0 96874343
+-- [Saida] -> [L "UML" 4,L "Haskell" 4]
+livrosPessoa :: Biblioteca -> Telefone -> [Livro]
+livrosPessoa (_, _, livrosEmprestados) telefone = [livro | (P _ tel, livro) <- livrosEmprestados, tel == telefone]
+
 main :: IO ()
 main = do
   putStrLn "Lista de pessoas com emprestimos sem repetição:"
@@ -83,3 +92,6 @@ main = do
 
   putStrLn "O usuário cujo telefone é '12345678' está apto a pegar um livro emprestado?"
   print (usuarioApto bancoDados0 12345678)
+
+  putStrLn "Os livros que estão com usuário cujo telefone é '96874343':"
+  print (livrosPessoa bancoDados0 96874343)
