@@ -54,6 +54,13 @@ livros (_, livrosDisponiveis, livrosEmprestados) = nub [nome | L nome _ <- livro
 qtdExemplares :: Biblioteca -> Nome -> Int
 qtdExemplares (_, livrosDisponiveis, livrosEmprestados) nome = length [nomeLivro | L nomeLivro _ <- livrosDisponiveis ++ map snd livrosEmprestados, nomeLivro == nome]
 
+-- retorna a quantidade disponível de um livro para
+-- empréstimo
+-- [Entrada] -> livroDisponivel bancoDados0 "Java"
+-- [Saida] -> 1
+livroDisponivel :: Biblioteca -> Nome -> Int
+livroDisponivel (_, livrosDisponiveis, _) nome = length [nomeLivro | L nomeLivro _ <- livrosDisponiveis, nomeLivro == nome]
+
 main :: IO ()
 main = do
   putStrLn "Lista de pessoas com emprestimos sem repetição:"
@@ -64,3 +71,6 @@ main = do
 
   putStrLn "Quantidade total para o livro 'CSP':"
   print (qtdExemplares bancoDados0 "CSP")
+
+  putStrLn "Quantidade de livros 'Java' disponiveis:"
+  print (livroDisponivel bancoDados0 "Java")
