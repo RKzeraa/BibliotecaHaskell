@@ -46,6 +46,14 @@ pessoasComEmprestimo (lp, ll, le) = nub (aux le)
 livros :: Biblioteca -> [Nome]
 livros (_, livrosDisponiveis, livrosEmprestados) = nub [nome | L nome _ <- livrosDisponiveis ++ map snd livrosEmprestados]
 
+-- quantidade total (disponível e emprestado) de um livro
+-- a contagem considera todas as edições
+-- retorna 0 se livro não existe
+-- [Entrada] -> qtdExemplares bancoDados0 "CSP"
+-- [Saida] -> 2
+qtdExemplares :: Biblioteca -> Nome -> Int
+qtdExemplares (_, livrosDisponiveis, livrosEmprestados) nome = length [nomeLivro | L nomeLivro _ <- livrosDisponiveis ++ map snd livrosEmprestados, nomeLivro == nome]
+
 main :: IO ()
 main = do
   putStrLn "Lista de pessoas com emprestimos sem repetição:"
@@ -53,3 +61,6 @@ main = do
 
   putStrLn "Lista de livros sem repetição:"
   print (livros bancoDados0)
+
+  putStrLn "Quantidade total para o livro 'CSP':"
+  print (qtdExemplares bancoDados0 "CSP")
