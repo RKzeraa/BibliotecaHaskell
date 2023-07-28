@@ -61,6 +61,12 @@ qtdExemplares (_, livrosDisponiveis, livrosEmprestados) nome = length [nomeLivro
 livroDisponivel :: Biblioteca -> Nome -> Int
 livroDisponivel (_, livrosDisponiveis, _) nome = length [nomeLivro | L nomeLivro _ <- livrosDisponiveis, nomeLivro == nome]
 
+-- retorna true se o usuário está apto a pegar um livro emprestado
+-- [Entrada] -> usuarioApto bancoDados0 12345678
+-- [Saida] -> True
+usuarioApto :: Biblioteca -> Telefone -> Bool
+usuarioApto (usuarios, _, _) telefone = any (\(P _ tel) -> tel == telefone) usuarios
+
 main :: IO ()
 main = do
   putStrLn "Lista de pessoas com emprestimos sem repetição:"
@@ -74,3 +80,6 @@ main = do
 
   putStrLn "Quantidade de livros 'Java' disponiveis:"
   print (livroDisponivel bancoDados0 "Java")
+
+  putStrLn "O usuário cujo telefone é '12345678' está apto a pegar um livro emprestado?"
+  print (usuarioApto bancoDados0 12345678)
