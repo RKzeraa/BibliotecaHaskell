@@ -76,6 +76,18 @@ usuarioApto (usuarios, _, _) telefone = any (\(P _ tel) -> tel == telefone) usua
 livrosPessoa :: Biblioteca -> Telefone -> [Livro]
 livrosPessoa (_, _, livrosEmprestados) telefone = [livro | (P _ tel, livro) <- livrosEmprestados, tel == telefone]
 
+-- retorna uma lista de pares com o livro no primeiro elemento
+-- e a lista de pessoas que estão com o livro emprestado
+-- distingue a edição do livro
+-- [Entrada] -> emprestimos bancoDados0
+-- [Saida] -> [(L "Java" 2,[P "Leandro" 12345678]),(L "CSP" 3,[P "Joabe" 45678910,P "Sidney" 93443234]),(L "UML" 4,[P "Lucas" 96874343]),(L "Haskell" 4,[P "Lucas" 96874343])]
+emprestimos :: Biblioteca -> [(Livro, [Pessoa])]
+emprestimos (_, _, livrosEmprestados) =
+  let livrosUnicos = nub (map snd livrosEmprestados)
+   in [(livro, pessoasPorLivro livro) | livro <- livrosUnicos]
+  where
+    pessoasPorLivro livro = [pessoa | (pessoa, l) <- livrosEmprestados, l == livro]
+
 main :: IO ()
 main = do
   putStrLn "Lista de pessoas com emprestimos sem repetição:"
@@ -95,3 +107,6 @@ main = do
 
   putStrLn "Os livros que estão com usuário cujo telefone é '96874343':"
   print (livrosPessoa bancoDados0 96874343)
+
+  putStrLn "Os livros que estão emprestados:"
+  print (emprestimos bancoDados0)
