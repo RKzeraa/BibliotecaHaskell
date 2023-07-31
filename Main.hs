@@ -88,6 +88,20 @@ emprestimos (_, _, livrosEmprestados) =
   where
     pessoasPorLivro livro = [pessoa | (pessoa, l) <- livrosEmprestados, l == livro]
 
+-- se livro está disponível, e se pessoa está cadastrada,
+-- livro sai da lista de disponível e entra na lista de
+-- empréstimo
+-- caso contrário, a biblioteca é retornada inalterada
+-- [Entrada] -> (emprestar bancoDados0 (P "Joabe" 45678910) (L "Java" 3)
+-- [Saida] -> ([P "Leandro" 12345678,P "Joabe" 45678910,P "Lucas" 96874343,P "Sidney" 93443234],[L "Concorrencia" 5],[(P "Joabe" 45678910,L "Java" 3),(P "Leandro" 12345678,L "Java" 2),(P "Joabe" 45678910,L "CSP" 3),(P "Lucas" 96874343,L "UML" 4),(P "Lucas" 96874343,L "Haskell" 4),(P "Sidney" 93443234,L "CSP" 3)])
+emprestar :: Biblioteca -> Pessoa -> Livro -> Biblioteca
+emprestar (pessoas, livrosDisponiveis, livrosEmprestados) pessoa livro
+  | pessoa `elem` pessoas = (pessoas, novoLivrosDisponiveis, novoLivrosEmprestados)
+  | otherwise = (pessoas, livrosDisponiveis, livrosEmprestados)
+  where
+    novoLivrosDisponiveis = filter (/= livro) livrosDisponiveis
+    novoLivrosEmprestados = (pessoa, livro) : livrosEmprestados
+
 main :: IO ()
 main = do
   putStrLn "Lista de pessoas com emprestimos sem repetição:"
@@ -110,3 +124,6 @@ main = do
 
   putStrLn "Os livros que estão emprestados:"
   print (emprestimos bancoDados0)
+
+  putStrLn "O usuário 'Joabe' pegou emprestimo do livro 'Java' Ed.'3':"
+  print (emprestar bancoDados0 (P "Joabe" 45678910) (L "Java" 3))
