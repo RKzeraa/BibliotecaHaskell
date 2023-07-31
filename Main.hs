@@ -102,6 +102,18 @@ emprestar (pessoas, livrosDisponiveis, livrosEmprestados) pessoa livro
     novoLivrosDisponiveis = filter (/= livro) livrosDisponiveis
     novoLivrosEmprestados = (pessoa, livro) : livrosEmprestados
 
+-- se livro está emprestado, retorna a biblioteca com
+-- o livro devolvido na lista de livros disponíveis
+-- caso contrário, a biblioteca é retornada inalterada
+-- [Entrada] -> devolver bancoDados0 12345678 "Java" 3
+-- [Saida] -> ([P "Leandro" 12345678,P "Joabe" 45678910,P "Lucas" 96874343,P "Sidney" 93443234],[L "Java" 3,L "Java" 3,L "Concorrencia" 5],[(P "Leandro" 12345678,L "Java" 2),(P "Joabe" 45678910,L "CSP" 3),(P "Lucas" 96874343,L "UML" 4),(P "Lucas" 96874343,L "Haskell" 4),(P "Sidney" 93443234,L "CSP" 3)])
+devolver :: Biblioteca -> Telefone -> Nome -> Edicao -> Biblioteca
+devolver (pessoas, livrosDisponiveis, livrosEmprestados) telefone nomeLivro edicaoLivro =
+  (pessoas, novoLivrosDisponiveis, novoLivrosEmprestados)
+  where
+    novoLivrosDisponiveis = L nomeLivro edicaoLivro : livrosDisponiveis
+    novoLivrosEmprestados = filter (\(P _ telefone, L nome edicao) -> nome /= nomeLivro || edicao /= edicaoLivro) livrosEmprestados
+
 main :: IO ()
 main = do
   putStrLn "Lista de pessoas com emprestimos sem repetição:"
@@ -127,3 +139,6 @@ main = do
 
   putStrLn "O usuário 'Joabe' pegou emprestimo do livro 'Java' Ed.'3':"
   print (emprestar bancoDados0 (P "Joabe" 45678910) (L "Java" 3))
+
+  putStrLn "O usuário 'Leandro' devolveu o emprestimo do livro 'Java' Ed.'3':"
+  print (devolver bancoDados0 12345678 "Java" 3)
